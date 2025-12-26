@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: public
+    schema: public
+    tables:
+      - name: books
+        description: "Raw books table in public schema"
+        loaded_at_field: id
+
+        columns:
+          - name: id
+            tests:
+              - not_null
+              - unique
+
+          - name: price
+            tests:
+              - not_null
+
+          - name: category
+            tests:
+              - not_null

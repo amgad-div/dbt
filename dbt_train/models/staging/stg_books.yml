@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_books
+    description: "Silver layer: cleaned books data"
+    columns:
+      - name: book_id
+        tests:
+          - not_null
+          - unique
+
+      - name: rating
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['One','Two','Three','Four','Five']
+
+      - name: available_quantity
+        tests:
+          - not_null

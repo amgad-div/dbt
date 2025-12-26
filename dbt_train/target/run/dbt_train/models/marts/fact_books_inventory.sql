@@ -1,0 +1,13 @@
+
+  create view "web_scraper"."books_books_gold"."fact_books_inventory__dbt_tmp"
+    
+    
+  as (
+    select
+    category,
+    count(book_id) as total_books,
+    sum(available_quantity) as total_available_quantity,
+    avg(price) as avg_price
+from "web_scraper"."books_books_gold"."dim_books"
+group by category
+  );
