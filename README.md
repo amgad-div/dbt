@@ -1,106 +1,93 @@
-📘 Project Overview
+# 🧠 dbt Books Analytics Project
 
-This repository contains a dbt project developed by Amgad for managing data transformations, testing, and documentation. It follows a layered architecture with clear separation between staging, marts, and snapshots.
+## 📌 Overview
+This repository contains a **dbt analytics project** built on **PostgreSQL** and designed as an **interview-ready production-style project**.
 
-📂 Structure
+The project follows **Medallion Architecture (Bronze → Silver → Gold)** and demonstrates:
+- Data modeling (Dimensions & Facts)
+- Data quality testing
+- Snapshots for historical tracking (SCD Type 2)
+- Documentation & lineage
+- Analytics engineering best practices
 
-dbt_train/
-└─ models/
-│  └─ staging/                # Cleaned source data (Silver layer)
-│  └─ marts/                  # Business-ready models (Gold layer)
-│  └─ example/                # Example models (views)
-└─ snapshots/                  # Historical tracking of changes
-└─ tests/                      # Custom SQL-based data tests
-└─ target/                     # Compiled SQL, run results, and docs
+---
 
-🔧 Configuration
+## 🏗️ Architecture (Medallion)
 
-Defined in dbt_project.yml:
 
-staging/ → schema: books_silver
+### Layers Explanation
+- **Bronze**: Raw data as ingested from source
+- **Silver**: Cleaned, standardized staging models
+- **Gold**: Business-ready dimensions & facts
+- **Snapshots**: Historical price tracking (SCD Type 2)
 
-marts/ → schema: books_gold
+---
+public.books (Bronze - Raw)
+↓
+stg_books (Silver - Staging)
+↓
+dim_books ─────────► fact_books_inventory (Gold - Analytics)
+↓
+books_price_snapshot ───► dim_books_price_history
 
-snapshots/ → schema: snapshots
+## 📁 Project Structure
 
-example/ → materialized as views
+dbt_books/
+├── models/
+│ ├── staging/ # Silver layer (clean & standardized)
+│ ├── marts/ # Gold layer (dimensions & facts)
+│ └── example/ # Example view models
+│
+├── snapshots/ # dbt snapshots (price history)
+├── tests/ # Custom SQL tests
+├── target/ # Compiled SQL & docs
+└── dbt_project.yml
 
-🧢 Testing
 
-Schema tests are defined in schema.yml:
 
-book_id: not_null, unique
+---
 
-rating: accepted_values → ['One','Two','Three','Four','Five']
+## ⚙️ Schema Configuration
 
-available_quantity: not_null
+| Layer | Schema |
+|------|-------|
+| Source (Bronze) | `public` |
+| Staging (Silver) | `books_silver` |
+| Marts (Gold) | `books` |
+| Snapshots | `snapshots` |
 
-Custom data tests are written in tests/ folder as .sql files.
+---
 
-Run all tests:
+## 📊 Models Overview
 
-dbt test
+| Model | Type | Description |
+|-----|-----|------------|
+| `stg_books` | Staging | Cleans raw book data |
+| `dim_books` | Dimension | Current book attributes |
+| `fact_books_inventory` | Fact | Inventory & availability metrics |
+| `books_price_snapshot` | Snapshot | Tracks price changes over time |
+| `dim_books_price_history` | Dimension | Business-friendly price history |
 
-🧱 Models
+---
 
-stg_books
+## 🧪 Testing Strategy
 
-Cleans and standardizes data from public.books
+### Schema Tests
+- `book_id`: `not_null`, `unique`
+- `price`: `not_null`
+- `rating`: `accepted_values (1–5)`
 
-Applies type casting and rating mapping
+### Custom Tests
+Located in `/tests`
 
-dim_books
-
-Builds a dimension table from stg_books
-
-Used in downstream marts and tests
-
-fact_books_inventory
-
-Aggregates book inventory by category
-
-Calculates total books, available quantity, and average price
-
-🕰 Snapshots
-
-books_price_snapshot
-
-Tracks historical changes in book prices
-
-Uses id as unique_key
-
-Includes dbt_valid_from and dbt_valid_to for versioning
-
-dim_books_price_history
-
-Builds a historical view from the snapshot
-
-Useful for trend analysis and price evolution
-
-Run snapshots:
-
-dbt snapshot
-
-📊 Documentation
-
-Generate and serve interactive docs:
-
-dbt docs generate
-dbt docs serve
-
-Then open:
-
-http://localhost:8080
-
-✅ Lineage Summary
-
-public.books → stg_books → dim_books → fact_books_inventory
-                                 ↸⃣ price_should_be_positive
-public.books → books_price_snapshot → dim_books_price_history
-
-📜 License
-
-This project is licensed under the MIT License.
+Example:
+```sql
+-- price_should_be_positive.sql
+SELECT *
+FROM {{ ref('dim_books') }}
+WHERE price <= 0;
+```
+ذذ
 
 🤝 Contributing
 
