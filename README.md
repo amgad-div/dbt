@@ -1,6 +1,6 @@
-# 🧠 dbt Books Analytics Project
+#  dbt Books Project
 
-## 📌 Overview
+## Overview
 This repository contains a **dbt analytics project** built on **PostgreSQL** and designed as an **interview-ready production-style project**.
 
 The project follows **Medallion Architecture (Bronze → Silver → Gold)** and demonstrates:
@@ -12,7 +12,7 @@ The project follows **Medallion Architecture (Bronze → Silver → Gold)** and 
 
 ---
 
-## 🏗️ Architecture (Medallion)
+## Architecture (Medallion)
 
 
 ### Layers Explanation
@@ -30,7 +30,7 @@ dim_books ─────────► fact_books_inventory (Gold - Analytics)
 ↓
 books_price_snapshot ───► dim_books_price_history
 
-## 📁 Project Structure
+##  Project Structure
 
 dbt_books/
 ├── models/
@@ -47,7 +47,7 @@ dbt_books/
 
 ---
 
-## ⚙️ Schema Configuration
+## Schema Configuration
 
 | Layer | Schema |
 |------|-------|
@@ -58,7 +58,7 @@ dbt_books/
 
 ---
 
-## 📊 Models Overview
+## Models Overview
 
 | Model | Type | Description |
 |-----|-----|------------|
@@ -70,7 +70,7 @@ dbt_books/
 
 ---
 
-## 🧪 Testing Strategy
+##  Testing Strategy
 
 ### Schema Tests
 - `book_id`: `not_null`, `unique`
@@ -89,6 +89,6 @@ WHERE price <= 0;
 ```
 ذذ
 
-🤝 Contributing
+Contributing
 
 Feel free to fork, open issues, or submit pull requests to improve the models and documentation.
